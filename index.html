@@ -1,0 +1,106 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="Secret Santa Gift Exchange">
+    <meta name="author" content="Dan Crayne">
+
+    <title>Secret Santa Gift Exchange</title>
+
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <form id='createUserForm' action="/users">
+
+            <div class="form-group">
+              <label for="firstName">First Name</label>
+              <input type="text" class="form-control" name="firstName" placeholder="First Name">
+            </div>
+
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input type="text" class="form-control" name="lastName" placeholder="Last Name">
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email address</label>
+              <input type="email" class="form-control" name="email" placeholder="Enter email">
+            </div>
+
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" class="form-control" name="password" placeholder="Password">
+            </div>
+
+            <button id="createUser" type="button" class="btn btn-primary">Create User</button>
+
+            <div id="creationResult" role="alert" style="margin-top: 10px"></div>
+          </form>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col-sm-12">
+          <form>
+            <button id="getUsers" type="button" class="btn btn-default">Get Users</button>
+            <button id="getEvents" type="button" class="btn btn-default">Get Events</button>
+            <button id="testPost" type="button" class="btn btn-default">Send a Post Test</button>
+          </form>
+          <br>
+          <pre id="output" style="margin-top:5px">output</pre>
+        </div>
+      </div>
+    </div>
+    
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+		<script type="text/javascript">
+
+      jQuery('#getEvents').click(function(event) {
+        jQuery.get('http://localhost:8080/events', function(data) {
+          jQuery('#output').html(JSON.stringify(data));
+        });
+      });
+
+      jQuery('#getUsers').click(function(event) {
+        jQuery.get('http://localhost:8080/users', function(data) {
+          jQuery('#output').html(JSON.stringify(data));
+        });
+      });
+
+      jQuery('#testPost').click(function() {
+        jQuery.post("http://localhost:8080/users", { hello: 'world' }, function(data) {
+          console.log(data);
+        });
+      });
+
+      jQuery('#createUser').click(function() {
+        userFormData = jQuery('#createUserForm').serialize();
+
+        jQuery.post("http://localhost:8080/users", userFormData)
+          .done(function(result) {
+            jQuery('#creationResult').addClass('alert alert-success');
+            jQuery('#creationResult').html('<strong>Success: </strong>' + result.message);
+          })
+          .fail(function(result) {
+            jQuery('#creationResult').addClass('alert alert-danger');
+            jQuery('#creationResult').html('<strong>Error: </strong>' + result.message);
+          })
+          .always(function() {
+            // TODO: fade away message
+          })
+      });
+
+    </script>
+
+  </body>
+</html>
