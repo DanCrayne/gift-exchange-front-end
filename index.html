@@ -8,97 +8,244 @@
 
     <title>Secret Santa Gift Exchange</title>
 
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<script type="text/javascript" src="resources/js/index.js"></script>
   </head>
 
   <body>
 
     <div class="container">
-      <div class="row">
-        <div class="col-sm-12">
-          <form id='createUserForm' action="/users">
-
-            <div class="form-group">
-              <label for="firstName">First Name</label>
-              <input type="text" class="form-control" name="firstName" placeholder="First Name">
-            </div>
-
-            <div class="form-group">
-              <label for="lastName">Last Name</label>
-              <input type="text" class="form-control" name="lastName" placeholder="Last Name">
-            </div>
-
-            <div class="form-group">
-              <label for="email">Email address</label>
-              <input type="email" class="form-control" name="email" placeholder="Enter email">
-            </div>
-
-            <div class="form-group">
-              <label for="password">Password</label>
-              <input type="password" class="form-control" name="password" placeholder="Password">
-            </div>
-
-            <button id="createUser" type="button" class="btn btn-primary">Create User</button>
-
-            <div id="creationResult" role="alert" style="margin-top: 10px"></div>
-          </form>
-        </div>
-      </div>
-
 
       <div class="row">
+
         <div class="col-sm-12">
-          <form>
-            <button id="getUsers" type="button" class="btn btn-default">Get Users</button>
-            <button id="getEvents" type="button" class="btn btn-default">Get Events</button>
-            <button id="testPost" type="button" class="btn btn-default">Send a Post Test</button>
+
+          <form id='eventForm' action="/users">
+
+            <div class="form-group">
+              <label for="eventSelect">Select Event...</label>
+              <select class="form-control" id="eventSelect"></select>
+            </div>
+
+            <div class="form-group">
+              <label for="eventName">Name</label>
+              <input type="text" class="form-control" name="eventName" placeholder="Name">
+            </div>
+
+            <div class="form-group">
+              <label for="eventDescription">Description</label>
+              <textarea rows="3" class="form-control" name="eventDescription" placeholder="Description"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="maxGiftPrice">Max Gift Price</label>
+              <input type="number" class="form-control" name="maxGiftPrice" placeholder="Max Gift Price">
+            </div>
+
+            <div class="form-group">
+              <label for="eventStreet">Street Address</label>
+              <input type="text" class="form-control" name="eventStreet" placeholder="Street Address">
+            </div>
+
+            <div class="form-group">
+              <label for="eventCity">City</label>
+              <input type="text" class="form-control" name="eventCity" placeholder="City">
+            </div>
+
+            <div class="form-group">
+              <label for="eventState">State</label>
+              <input type="text" class="form-control" name="eventState" placeholder="State">
+            </div>
+
+            <div class="form-group">
+              <label for="eventDate">Date</label>
+              <input type="text" class="form-control" name="eventDate" placeholder="Date">
+            </div>
+
+            <button id="createEvent" type="button" class="btn btn-primary">Create</button>
+            <button id="updateEvent" type="button" class="btn btn-primary">Update</button>
+            <button id="deleteEvent" type="button" class="btn btn-primary">Delete</button>
+
+            <div id="eventUpdateResult" role="alert" style="margin-top: 10px">
+            </div>
           </form>
+
+          <table id="userTable" class="table table-striped">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+              </tr>
+            <thead>
+            <tbody>
+            </tbody>
+          </table>
+
+          <button id="addUser" type="button" class="btn btn-primary">Add User</button>
+
+          <br><br>
+
+          <div class="row">
+            <div class="col-sm-12">
+              <form id='addUserForm' action="/users">
+
+                <div class="form-group">
+                  <label for="firstName">First Name</label>
+                  <input type="text" class="form-control" name="firstName" placeholder="First Name">
+                </div>
+
+                <div class="form-group">
+                  <label for="lastName">Last Name</label>
+                  <input type="text" class="form-control" name="lastName" placeholder="Last Name">
+                </div>
+
+                <div class="form-group">
+                  <label for="email">Email address</label>
+                  <input type="email" class="form-control" name="email" placeholder="Enter email">
+                </div>
+
+                <div class="form-group">
+                  <label for="password">Password</label>
+                  <input type="password" class="form-control" name="password" placeholder="Password">
+                </div>
+
+                <div id="creationResult" role="alert" style="margin-top: 10px"></div>
+              </form>
+            </div>
+          </div>
+
+
+          <button id="getUsers" type="button" class="btn btn-default">Get Users</button>
+          <button id="getEvents" type="button" class="btn btn-default">Get Events</button>
+
           <br>
+
           <pre id="output" style="margin-top:5px">output</pre>
+
         </div>
       </div>
+
     </div>
     
 
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
 		<script type="text/javascript">
 
-      jQuery('#getEvents').click(function(event) {
-        jQuery.get('http://localhost:8080/events', function(data) {
-          jQuery('#output').html(JSON.stringify(data));
+/*
+      var hostUrl = 'http://localhost:8080';
+
+      jQuery(document).ready(function() {
+        jQuery.get(hostUrl + '/events', function(eventList) {
+          let listItems = '<option value="" disabled selected>Select event...</option>'
+                        + '<option value="new">Add...</option>';
+
+          for (thisEvent of eventList) {
+            listItems += '<option value="' + JSON.stringify(thisEvent["id"]) + '">' 
+                      + JSON.stringify(thisEvent["name"]).replace(/['"]+/g, '')
+                      + '</option>';
+          }
+
+          jQuery('#eventSelect').html(listItems);
         });
+
+        jQuery('input').val('');
+        jQuery('textarea').val('');
       });
 
-      jQuery('#getUsers').click(function(event) {
-        jQuery.get('http://localhost:8080/users', function(data) {
-          jQuery('#output').html(JSON.stringify(data));
+      jQuery("#eventSelect").change(function() {
+        eventId = jQuery("#eventSelect").val();
+
+        // TODO: break population into functions
+        if (eventId !== 'new') {
+          // Populate fields
+          jQuery.get(hostUrl + '/events/' + eventId, function(result) {
+            jQuery('input[name=eventName]').val(result.name.replace(/['"]+/g, ''));
+            jQuery('textarea[name=eventDescription]').val(result.description.replace(/['"]+/g, ''));
+            jQuery('input[name=maxGiftPrice]').val(result.max_gift_price);
+            jQuery('input[name=eventStreet]').val(result.loc_street.replace(/['"]+/g, ''));
+            jQuery('input[name=eventCity]').val(result.loc_city.replace(/['"]+/g, ''));
+            jQuery('input[name=eventState]').val(result.loc_state.replace(/['"]+/g, ''));
+            jQuery('input[name=eventZip]').val(result.loc_zipcode.replace(/['"]+/g, ''));
+            console.log(result);
+          });
+          // Populate event users
+          jQuery.get(hostUrl + '/events/' + eventId + '/users', function(userList) {
+            jQuery('#output').html(JSON.stringify(userList));
+
+            let userRows = '';
+            console.log(JSON.stringify(userList));
+
+            for (user of userList) {
+              userRows += '<tr>' 
+                        + '<td>' + JSON.stringify(user["id"]) + '</td>'
+                        + '<td>' + JSON.stringify(user["first_name"]).replace(/['"]+/g, '') + '</td>'
+                        + '<td>' + JSON.stringify(user["last_name"]).replace(/['"]+/g, '') + '</td>'
+                        + '<td>' + JSON.stringify(user["email_addr"]).replace(/['"]+/g, '') + '</td>'
+                        + '</tr>';
+              // Append this row to the end of the table's last row
+              jQuery('#userTable > tbody').html(userRows);
+            }
         });
+        } else {
+          // clear inputs
+          jQuery('input').val('');
+          jQuery('textarea').val('');
+          jQuery('#userTable > tbody').html('');
+          // add new event...
+        }
       });
 
-      jQuery('#testPost').click(function() {
-        jQuery.post("http://localhost:8080/users", { hello: 'world' }, function(data) {
-          console.log(data);
-        });
-      });
 
-      jQuery('#createUser').click(function() {
-        userFormData = jQuery('#createUserForm').serialize();
+      // TODO: add user to particular event
+      jQuery('#addUser').click(function() {
+        userFormData = jQuery('#addUserForm').serialize();
+        console.log(userFormData);
 
-        jQuery.post("http://localhost:8080/users", userFormData)
+        jQuery.post(hostUrl + '/users', userFormData)
           .done(function(result) {
             jQuery('#creationResult').addClass('alert alert-success');
-            jQuery('#creationResult').html('<strong>Success: </strong>' + result.message);
+            jQuery('#creationResult').html('<strong>Success: </strong>user created');
           })
           .fail(function(result) {
             jQuery('#creationResult').addClass('alert alert-danger');
-            jQuery('#creationResult').html('<strong>Error: </strong>' + result.message);
+            jQuery('#creationResult').html('<strong>Error: </strong>cannot create user');
+            console.log(result);
           })
           .always(function() {
             // TODO: fade away message
           })
       });
+
+      jQuery('#getEvents').click(function(event) {
+        jQuery.get(hostUrl + '/events', function(eventList) {
+          jQuery('#output').html(JSON.stringify(eventList));
+        });
+      });
+
+      jQuery('#getUsers').click(function() {
+        jQuery.get(hostUrl + '/users', function(userList) {
+          jQuery('#output').html(JSON.stringify(userList));
+
+          let userRows = '';
+          console.log(JSON.stringify(userList));
+
+          for (user of userList) {
+            userRows += '<tr>' 
+                      + '<td>' + JSON.stringify(user["id"]) + '</td>'
+                      + '<td>' + JSON.stringify(user["first_name"]).replace(/['"]+/g, '') + '</td>'
+                      + '<td>' + JSON.stringify(user["last_name"]).replace(/['"]+/g, '') + '</td>'
+                      + '<td>' + JSON.stringify(user["email_addr"]).replace(/['"]+/g, '') + '</td>'
+                      + '</tr>';
+            // Append this row to the end of the table's last row
+            jQuery('#userTable > tbody').html(userRows);
+          }
+        });
+      });
+      */
 
     </script>
 
