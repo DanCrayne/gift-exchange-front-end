@@ -6,14 +6,6 @@
     <meta name="description" content="Secret Santa Gift Exchange">
     <meta name="author" content="Dan Crayne">
 
-
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous" async></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous" async></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <!-- note: the following script can't run async, as it needs to wait for the document to become ready before adding events to the event list -->
-		<script type="text/javascript" src="resources/js/index.js"></script>
-
-
     <title>Secret Santa Gift Exchange</title>
 
   </head>
@@ -21,63 +13,68 @@
   <body>
 
     <div class="container">
-
       <div class="row">
-
         <div class="col-sm-12">
 
           <form id='eventForm' action="/users">
+          <fieldset>
+            <legend>Event Information</legend>
 
-            <div class="form-group">
-              <label for="eventSelect">Select Event...</label>
-              <select class="form-control" id="eventSelect"></select>
-            </div>
+              <div class="form-group">
+                <label for="eventSelect">Select Event...</label>
+                <select class="form-control" id="eventSelect"></select>
+              </div>
 
-            <div class="form-group">
-              <label for="eventName">Name</label>
-              <input type="text" class="form-control" name="eventName" placeholder="Name">
-            </div>
+              <div class="form-group">
+                <label for="eventName">Name</label>
+                <input type="text" class="form-control" name="eventName" placeholder="Name">
+              </div>
 
-            <div class="form-group">
-              <label for="eventDescription">Description</label>
-              <textarea rows="3" class="form-control" name="eventDescription" placeholder="Description"></textarea>
-            </div>
+              <div class="form-group">
+                <label for="eventDescription">Description</label>
+                <textarea rows="3" class="form-control" name="eventDescription" placeholder="Description"></textarea>
+              </div>
 
-            <div class="form-group">
-              <label for="maxGiftPrice">Max Gift Price</label>
-              <input type="number" class="form-control" name="maxGiftPrice" placeholder="Max Gift Price">
-            </div>
+              <div class="form-group">
+                <label for="maxGiftPrice">Max Gift Price</label>
+                <input type="number" class="form-control" name="maxGiftPrice" placeholder="Max Gift Price">
+              </div>
 
-            <div class="form-group">
-              <label for="eventStreet">Street Address</label>
-              <input type="text" class="form-control" name="eventStreet" placeholder="Street Address">
-            </div>
+              <div class="form-group">
+                <label for="eventStreet">Street Address</label>
+                <input type="text" class="form-control" name="eventStreet" placeholder="Street Address">
+              </div>
 
-            <div class="form-group">
-              <label for="eventCity">City</label>
-              <input type="text" class="form-control" name="eventCity" placeholder="City">
-            </div>
+              <div class="form-group">
+                <label for="eventCity">City</label>
+                <input type="text" class="form-control" name="eventCity" placeholder="City">
+              </div>
 
-            <div class="form-group">
-              <label for="eventState">State</label>
-              <input type="text" class="form-control" name="eventState" placeholder="State">
-            </div>
+              <div class="form-group">
+                <label for="eventState">State</label>
+                <input type="text" class="form-control" name="eventState" placeholder="State">
+              </div>
 
-            <div class="form-group">
-              <label for="eventDate">Date</label>
-              <input type="text" class="form-control" name="eventDate" placeholder="Date">
-            </div>
+              <div class="form-group">
+                <label for="eventDate">Date</label>
+                <input type="text" class="form-control" name="eventDate" placeholder="Date">
+              </div>
 
-            <button id="createEvent" type="button" class="btn btn-primary">Create</button>
-            <button id="updateEvent" type="button" class="btn btn-primary">Update</button>
-            <button id="deleteEvent" type="button" class="btn btn-primary">Delete</button>
+              <button id="createEvent" type="button" class="btn btn-primary">Create</button>
+              <button id="updateEvent" type="button" class="btn btn-primary">Update</button>
+              <button id="deleteEvent" type="button" class="btn btn-primary">Delete</button>
 
-            <div id="eventUpdateResult" role="alert" style="margin-top: 10px">
-            </div>
+              <div id="eventUpdateResult" role="alert" style="margin-top: 10px">
+              </div>
+
+            </fieldset>
           </form>
 
           <table id="userTable" class="table table-striped">
             <thead>
+              <tr>
+                <th colspan="4"><h4>Participants</h4></th>
+              </tr>
               <tr>
                 <th>ID</th>
                 <th>First Name</th>
@@ -89,39 +86,42 @@
             </tbody>
           </table>
 
-          <button id="addUser" type="button" class="btn btn-primary">Add User</button>
-
-          <br><br>
-
           <div class="row">
             <div class="col-sm-12">
               <form id='addUserForm' action="/users">
+                <fieldset>
+                  <legend>Add a new participant</legend>
 
-                <div class="form-group">
-                  <label for="firstName">First Name</label>
-                  <input type="text" class="form-control" name="firstName" placeholder="First Name">
-                </div>
+                  <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" class="form-control" name="firstName" placeholder="First Name">
+                  </div>
 
-                <div class="form-group">
-                  <label for="lastName">Last Name</label>
-                  <input type="text" class="form-control" name="lastName" placeholder="Last Name">
-                </div>
+                  <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" class="form-control" name="lastName" placeholder="Last Name">
+                  </div>
 
-                <div class="form-group">
-                  <label for="email">Email address</label>
-                  <input type="email" class="form-control" name="email" placeholder="Enter email">
-                </div>
+                  <div class="form-group">
+                    <label for="email">Email address</label>
+                    <input type="email" class="form-control" name="email" placeholder="Enter email">
+                  </div>
 
-                <div class="form-group">
-                  <label for="password">Password</label>
-                  <input type="password" class="form-control" name="password" placeholder="Password">
-                </div>
+                  <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" name="password" placeholder="Password">
+                  </div>
 
-                <div id="creationResult" role="alert" style="margin-top: 10px"></div>
+                  <div id="creationResult" role="alert" style="margin-top: 10px"></div>
+
+                  <button id="addUser" type="button" class="btn btn-primary">Add User</button>
+
+                  </fieldset>
               </form>
             </div>
           </div>
 
+          <br><br>
 
           <button id="getUsers" type="button" class="btn btn-default">Get Users</button>
           <button id="getEvents" type="button" class="btn btn-default">Get Events</button>
@@ -136,4 +136,27 @@
     </div>
     
   </body>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" 
+          integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" 
+          crossorigin="anonymous">
+  </script>
+
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" 
+          integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" 
+          crossorigin="anonymous">
+  </script>
+
+  <link rel="stylesheet" 
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" 
+        crossorigin="anonymous">
+
+  <!-- NOTE: the following script can't run async, as it needs to wait for 
+             the document to become ready before adding events to the event list.
+             Also, this needs to come after the above HTML so that it can bind
+             events for particular elements. Further, jQuery cannot be run async
+             as this script depends on it. -->
+  <script type="text/javascript" src="resources/js/index.js"></script>
+
 </html>
