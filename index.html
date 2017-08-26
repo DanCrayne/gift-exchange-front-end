@@ -3,16 +3,17 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="description" content="Secret Santa Gift Exchange">
+    <meta name="description" content="Gift Exchange Manager">
     <meta name="author" content="Dan Crayne">
 
-    <title>Secret Santa Gift Exchange</title>
+    <title>Gift Exchange Manager</title>
 
   </head>
 
   <body>
 
     <div class="container">
+
       <div class="row">
         <div class="col-sm-12">
 
@@ -64,6 +65,11 @@
                 <input type="text" class="form-control" name="date" placeholder="Date">
               </div>
 
+              <div class="form-group">
+                <label for="time">Time</label>
+                <input type="text" class="form-control" name="time" placeholder="Time">
+              </div>
+
               <button id="createEvent" type="button" class="btn btn-primary" disabled>Create</button>
               <button id="updateEvent" type="button" class="btn btn-primary" disabled>Update</button>
               <button id="deleteEvent" type="button" class="btn btn-primary" disabled>Delete</button>
@@ -73,46 +79,50 @@
 
             </fieldset>
           </form>
+        </div>
+      </div> <!-- row -->
 
-          <hr>
+      <hr>
 
-          <div class="row">
-            <div class="col-sm-12">
-              <form id='addUserForm' action="/users">
-                <fieldset>
-                  <legend>Add a new participant</legend>
+      <div class="row">
+        <div class="col-sm-12">
+          <form id='addUserForm' action="/users">
+            <fieldset>
+              <legend>Add a new participant</legend>
 
-                  <div class="form-group">
-                    <label for="firstName">First Name</label>
-                    <input type="text" class="form-control" name="firstName" placeholder="First Name">
-                  </div>
+              <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" class="form-control" name="firstName" placeholder="First Name">
+              </div>
 
-                  <div class="form-group">
-                    <label for="lastName">Last Name</label>
-                    <input type="text" class="form-control" name="lastName" placeholder="Last Name">
-                  </div>
+              <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" class="form-control" name="lastName" placeholder="Last Name">
+              </div>
 
-                  <div class="form-group">
-                    <label for="email">Email address</label>
-                    <input type="email" class="form-control" name="email" placeholder="Enter email">
-                  </div>
+              <div class="form-group">
+                <label for="email">Email address</label>
+                <input type="email" class="form-control" name="email" placeholder="Enter email">
+              </div>
 
-                  <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" class="form-control" name="password" placeholder="Password">
-                  </div>
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" name="password" placeholder="Password">
+              </div>
 
-                  <button id="addUser" type="button" class="btn btn-primary" disabled>Add User</button>
+              <button id="addUser" type="button" class="btn btn-primary" disabled>Add User</button>
 
-                  <div id="creationResult" role="alert" style="margin-top: 10px"></div>
+              <div id="creationResult" role="alert" style="margin-top: 10px"></div>
 
-                  </fieldset>
-              </form>
-            </div>
-          </div>
+              </fieldset>
+          </form>
+        </div>
+      </div> <!-- row -->
 
-          <br>
+      <br>
 
+      <div class="row">
+        <div class="col-sm-12">
           <table id="userTable" class="table table-striped">
             <thead>
               <tr>
@@ -123,16 +133,22 @@
                 <th>First Name</th>
                 <th>Last Name</th>
                 <th>Email</th>
+                <th>Actions</th>
               </tr>
             <thead>
             <tbody>
             </tbody>
           </table>
-
         </div>
-      </div>
+      </div> <!-- row -->
 
-    </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <button id="randomize" type="button" class="btn btn-danger" disabled>Assign Receivers and Send Messages</button>
+        </div>
+      </div> <!-- row -->
+
+    </div> <!-- container -->
     
   </body>
 
@@ -140,6 +156,16 @@
           integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" 
           crossorigin="anonymous">
   </script>
+
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js">
+  </script>
+
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
+
+  <script src="resources/js/jquery.timepicker.js">
+  </script>
+
+  <link rel="stylesheet" href="resources/css/jquery.timepicker.css"/>
 
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" 
           integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" 
@@ -149,7 +175,7 @@
   <link rel="stylesheet" 
         href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
         integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" 
-        crossorigin="anonymous">
+        crossorigin="anonymous"/>
 
   <!-- NOTE: the following script can't run async, as it needs to wait for 
              the document to become ready before adding events to the event list.
