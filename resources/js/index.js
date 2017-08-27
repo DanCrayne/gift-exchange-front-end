@@ -3,6 +3,9 @@ var eventId = 'new';
 // TODO: this should be set via authentication
 var loginId = 1;
 
+// TODO: form validation
+
+
 // *** Initial Setup ***
 jQuery(document).ready(function() {
   refreshEventSelectionList();
@@ -19,9 +22,7 @@ jQuery(document).ready(function() {
   });
 });
 
-
-// *** Event Modification ***
-
+// *** Event Selection ***
 jQuery("#eventSelect").change(function() {
   eventId = jQuery("#eventSelect").val();
 
@@ -41,58 +42,15 @@ jQuery("#eventSelect").change(function() {
 });
 
 
-// *** Add User ***
-jQuery('#addUser').click(function() {
-  userFormData = jQuery('#addUserForm').serialize();
-
-  jQuery.post(hostUrl + '/users', userFormData)
-    .done(function(result) {
-      // Get the new user ID - this is done using the creation response, which 
-      // returns the location of the new resource (e.g. /users/32)
-      newUserId = result.split('/')[2];
-
-      // add new user to event_users table
-      jQuery.post(hostUrl + '/events/' + eventId + '/users/' + newUserId, userFormData)
-        .done(function(result) {
-          jQuery('#creationResult').addClass('alert alert-success');
-          jQuery('#creationResult').html('<strong>User added to event</strong>');
-          refreshEventUsersTable();
-          clearAddUserForm();
-        })
-
-        .fail(function(result) {
-          jQuery('#creationResult').addClass('alert alert-danger');
-          jQuery('#creationResult').html('<strong>Error: </strong>cannot add user');
-        })
-
-        .always(function() {
-          jQuery('#creationResult').fadeTo(2000, 500).slideUp(500, function() {
-            jQuery('#creationResult').slideUp(500);
-          });
-        })
-    })
-
-    .fail(function(result) {
-      jQuery('#creationResult').addClass('alert alert-danger');
-      jQuery('#creationResult').html('<strong>Error: </strong>cannot create user');
-    })
-
-    .always(function() {
-      jQuery('#creationResult').fadeTo(2000, 500).slideUp(500, function() {
-        jQuery('#creationResult').slideUp(500);
-      });
-    })
-});
-
+// **** Event Actions ****
 
 // *** Add Event ***
 jQuery('#createEvent').click(function() {
-  eventFormData = jQuery('#eventForm').serialize();
-  eventFormData += '&adminId=' + loginId;
+  eventFormData = getSerializedFormData();
 
   jQuery.post(hostUrl + '/events', eventFormData)
     .done(function(result) {
-      jQuery('#eventResult').addClass('alert alert-success');
+      jQuery('#eventResult').attr('class', 'alert alert-success');
       jQuery('#eventResult').html('<strong>Event Created</strong>');
       eventId = result.split('/')[2];
       refreshEventSelectionList();
@@ -100,7 +58,7 @@ jQuery('#createEvent').click(function() {
     })
 
     .fail(function(result) {
-      jQuery('#eventResult').addClass('alert alert-danger');
+      jQuery('#eventResult').attr('class', 'alert alert-danger');
       jQuery('#eventResult').html('<strong>Error: </strong>cannot create event');
     })
 
@@ -114,11 +72,7 @@ jQuery('#createEvent').click(function() {
 
 // *** Update Event ***
 jQuery('#updateEvent').click(function() {
-  eventFormData = jQuery('#eventForm').serialize();
-  eventFormData += '&dateOccurs=' 
-                 +       jQuery('#eventForm input[name=date]').val()
-                 + ' ' + jQuery('#eventForm input[name=time]').val();
-  eventFormData += '&adminId=' + loginId;
+  eventFormData = getSerializedFormData();
 
   jQuery.ajax({
     url: hostUrl + '/events/' + eventId
@@ -127,19 +81,17 @@ jQuery('#updateEvent').click(function() {
   , dataType: 'text'
   , data: eventFormData
   , success: function(response) {
-      jQuery('#eventResult').addClass('alert alert-success');
+      jQuery('#eventResult').attr('class', 'alert alert-success');
       jQuery('#eventResult').html('<strong>Event Updated</strong>');
-      jQuery('#eventResult').fadeTo(2000, 500).slideUp(500, function() {
-        jQuery('#eventResult').slideUp(500);
-      });
     }
   , error: function(response) {
-      jQuery('#eventResult').addClass('alert alert-danger');
+      jQuery('#eventResult').attr('class', 'alert alert-danger');
       jQuery('#eventResult').html('<strong>Error: </strong>cannot update event');
-      jQuery('#eventResult').fadeTo(2000, 500).slideUp(500, function() {
-        jQuery('#eventResult').slideUp(500);
-      });
-  }
+    }
+  });
+
+  jQuery('#eventResult').fadeTo(2000, 500).slideUp(500, function() {
+    jQuery('#eventResult').slideUp(500);
   });
 });
 
@@ -154,11 +106,9 @@ jQuery('#deleteEvent').click(function() {
   , crossDomain: true
   , dataType: 'text'
   , success: function(response) {
-      jQuery('#eventResult').addClass('alert alert-success');
+      jQuery('#eventResult').attr('class', 'alert alert-success');
       jQuery('#eventResult').html('<strong>Event Deleted</strong>');
-      jQuery('#eventResult').fadeTo(2000, 500).slideUp(500, function() {
-        jQuery('#eventResult').slideUp(500);
-      });
+
       refreshEventSelectionList();
       clearAllFormValues();
       disableAllFormInputs();
@@ -166,14 +116,52 @@ jQuery('#deleteEvent').click(function() {
     }
 
   , error: function(response) {
-      jQuery('#eventResult').addClass('alert alert-danger');
+      jQuery('#eventResult').attr('class', 'alert alert-danger');
       jQuery('#eventResult').html('<strong>Error: </strong>Cannot Delete Event');
-      jQuery('#eventResult').fadeTo(2000, 500).slideUp(500, function() {
-        jQuery('#eventResult').slideUp(500);
-      });
     }
   });
 
+  jQuery('#eventResult').fadeTo(2000, 500).slideUp(500, function() {
+    jQuery('#eventResult').slideUp(500);
+  });
+});
+
+
+// *** Add user to event ***
+
+jQuery('#addUser').click(function() {
+  userFormData = jQuery('#addUserForm').serialize();
+
+  jQuery.post(hostUrl + '/users', userFormData)
+    .then(function(result) {
+      // Get the new user ID - this is done using the creation response, which 
+      // returns the location of the new resource (e.g. /users/32)
+      return newUserId = result.split('/')[2];
+    })
+
+    .then(function(newUserId) {
+
+      // add new user to event_users table
+      return jQuery.post(hostUrl + '/events/' + eventId + 
+                                   '/users/' + newUserId, userFormData)
+    })
+
+    .then(function(result) {
+        jQuery('#creationResult').attr('class', 'alert alert-success');
+        jQuery('#creationResult').html('<strong>User added to event</strong>');
+        refreshEventUsersTable();
+        clearAddUserForm();
+
+    })
+
+    .catch(function(err) {
+        jQuery('#creationResult').attr('class', 'alert alert-danger');
+        jQuery('#creationResult').html('<strong>Error: </strong>cannot add user');
+    });
+
+    jQuery('#creationResult').fadeTo(2000, 500).slideUp(500, function() {
+      jQuery('#creationResult').slideUp(500);
+    });
 });
 
 
@@ -191,16 +179,35 @@ jQuery('#randomize').click(function() {
         for (pair of result) {
           console.log(JSON.stringify(pair));
         }
+        jQuery('#randomizeAndSendResult').attr('class', 'alert alert-success');
+        jQuery('#randomizeAndSendResult').html('<strong>Participants have been notified!</strong>');
       })
 
       .catch(function(err) {
+        jQuery('#randomizeAndSendResult').attr('class', 'alert alert-danger');
+        jQuery('#randomizeAndSendResult').html('<strong>Error: </strong>Something icky happend! Cannot randomizeAndSendResult or send messages :(');
         console.log(err);
+      });
+
+      jQuery('#randomizeAndSendResult').fadeTo(2000, 500).slideUp(500, function() {
+        jQuery('#randomizeAndSendResult').slideUp(500);
       });
   }
 });
 
 
 // *** Helper Functions ***
+
+function getSerializedFormData() {
+  eventFormData = jQuery('#eventForm').serialize();
+  eventFormData += '&dateOccurs=' 
+                 +       jQuery('#eventForm input[name=date]').val()
+                 + ' ' + jQuery('#eventForm input[name=time]').val();
+  eventFormData += '&adminId=' + loginId;
+
+  return eventFormData;
+}
+
 
 function removeQuotes(str) {
   if (str !== null)
@@ -217,6 +224,15 @@ function refreshEventFormInputs() {
   jQuery.get(hostUrl + '/events/' + eventId, function(result) {
   })
     .done(function(result) {
+
+      let dateOccurs = removeQuotes(result.occurs);
+      let datePart = '';
+      let timePart = '';
+      if (dateOccurs !== undefined) {
+        datePart = dateOccurs.split(' ')[0];
+        timePart = dateOccurs.split(' ')[1];
+      }
+
       jQuery('#eventForm input[name=name]')           
         .val(removeQuotes(result.name));
 
@@ -239,10 +255,10 @@ function refreshEventFormInputs() {
         .val(removeQuotes(result.loc_zipcode));
 
       jQuery('#eventForm input[name=date]')
-        .val(removeQuotes(result.occurs).split(' ')[0]);
+        .val(datePart);
 
       jQuery('#eventForm input[name=time]')
-        .val(removeQuotes(result.occurs).split(' ')[1]);
+        .val(timePart);
     })
 
     .fail(function() {
@@ -283,25 +299,61 @@ function refreshEventUsersTable() {
 
     // TODO: implement modify and delete actions
     for (user of result) {
+      let userId = removeQuotes(JSON.stringify(user["id"]));
       userRows += '<tr>' 
                 + '<td>' + JSON.stringify(user["id"]) + '</td>'
                 + '<td>' + removeQuotes(JSON.stringify(user["first_name"])) + '</td>'
                 + '<td>' + removeQuotes(JSON.stringify(user["last_name"]))  + '</td>'
                 + '<td>' + removeQuotes(JSON.stringify(user["email_addr"])) + '</td>'
-                + '<td>' 
-                + '<button name="modifyUser" value="' + removeQuotes(JSON.stringify(user["id"])) + '" class="btn btn-default" disabled>Modify</button>'
-                + '<button name="deleteUser" value="' + removeQuotes(JSON.stringify(user["id"])) + '" class="btn btn-default" disabled>Delete</button>'
+                + '<td>'
+                + '<button name="modifyUser_' + userId + '" value="' + userId 
+                +   '" class="btn btn-default" disabled>Modify</button>'
+
+//                + '<button name="deleteUser_' + userId + '" value="' + userId 
+//                +   '" class="btn btn-default">Delete</button>'
+
+                + '<button name="deleteUser" value="' + userId 
+                +   '" class="btn btn-default">Delete</button>'
+
+                + '<button name="sendAgain_' + userId + '" value="' + userId 
+                +   '" class="btn btn-default" disabled>Resend</button>'
                 + '</td>'
                 + '</tr>';
     }
+
   })
-    .done(function() {
+    .then(function() {
       jQuery('#userTable > tbody').html(userRows);
     })
-    .fail(function() {
+
+    .then(function() {
+      listenForDeleteUser();
+    })
+
+    .catch(function(err) {
       alert('Could not get list of users');
     });
-}
+};
+
+function listenForDeleteUser() {
+  jQuery('#userTable button[name=deleteUser]').click(function() {
+    userId = jQuery(this).val();
+
+    jQuery.ajax({
+      url: hostUrl + '/users/' + userId
+    , method: 'DELETE'
+    , crossDomain: true
+    , dataType: 'text'
+    , success: function(response) {
+        refreshEventUsersTable();
+      }
+
+    , error: function(response) {
+        return response;
+      }
+    });
+  })
+};
 
 
 // *** Edit Modes ***
@@ -320,8 +372,8 @@ function switchToCreateEventMode() {
 function switchToUpdateEventMode() {
   enableUpdateEventButton();
   enableDeleteEventButton();
-  enableAddUserButton();
   enableAddUserFormInputs();
+  enableAddUserButton();
   enableEventFormTextInputs();
   enableRandomizeButton();
 }
@@ -371,6 +423,10 @@ function enableDeleteEventButton() {
 
 function enableAddUserButton() {
   jQuery('#addUser').prop('disabled', false);
+}
+
+function enableDeleteUserButtons() {
+  jQuery('#userTable button[name=deleteUser]').prop('disabled', false);
 }
 
 function enableRandomizeButton() {
